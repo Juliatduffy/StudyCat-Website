@@ -8,12 +8,11 @@ Hosted on GitHub pages at this link: https://juliatduffy.github.io/StudyCat/inde
 
 ## Features
 
-- Animated pixel art cat sprites built using `@keyframes` and `steps()`
-- Ambient sound effects including rain, chirping, and other white noises
+- Interactive cat animations
+- Customizable ambient sounds such as rain, chirping, and traffic
 - AI-Generated pixel backgrounds
 - Clickable tracklist with now playing display
-- Interactive animations
-- Fullscreen support with layout adjustments on enter/exit
+- Fullscreen support
 - 3 rooms with different themes - forest cat (lofi), city cat (jazz), and space cat (techno)
 
 ---
