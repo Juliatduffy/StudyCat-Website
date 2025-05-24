@@ -2,17 +2,13 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Space Cat Room</title>
-
-  <!-- Animation Player for Cat -->
-  <script src="https://unpkg.com/@dotlottie/player-component@2.7.12/dist/dotlottie-player.mjs" type="module"></script>
-
+  <title>Cat Controller</title>
   <style>
     body {
       margin: 0;
-      padding: 0;
+      overflow: hidden;
       font-family: 'Segoe UI', sans-serif;
-      background: url('images/big-space.png') no-repeat center center fixed;
+      background: url('images/city.png') no-repeat center center fixed;
       background-size: cover;
       color: white;
       text-align: center;
@@ -20,45 +16,36 @@
     }
 
     .title {
-    position: fixed;
-    top: 80px;
-    left: 80px;
-    background-color: rgba(0, 0, 0, 0.8);
-    padding: 1rem;
-    border-radius: 10px;
+      position: fixed;
+      top: 80px;
+      left: 80px;
+      background-color: rgba(14, 18, 36, 0.9);
+      padding: 1rem;
+      border-radius: 10px;
     }
 
-
-    h1{
+    h2 {
       margin-top: 2rem;
-    }
-    p {
-      font-size: 1.3rem;
+      text-align: left;
     }
 
-    /* Cat Animation */
-    #cat-wrapper {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      z-index: 10;
-      pointer-events: none; 
+    .title p, .title a{
+        text-align: left;
+        font-size: 1.2rem;
     }
-
-    /* Right-side Toolbar */
+    
     #sound-toolbar {
       position: fixed;
       top: 50%;
       right: 0;
       transform: translateY(-50%);
-      background: rgba(0, 0, 0, 0.8);
+      background: rgba(14, 18, 36, 0.9);
       padding: 1rem;
-     border-radius: 10px;      
-     color: white;
+      border-radius: 10px;
+      color: white;
       z-index: 999;
       margin-right: 20px;
-      width: 130px;
+      width: 120px;
     }
 
     .sound-control {
@@ -80,7 +67,7 @@
     #fullscreen-button {
       padding: 0.4rem 0.6rem;
       font-size: 0.9rem;
-      background: rgba(178, 16, 16, 0.995);
+      background: rgba(23, 43, 104, 0.995);
       color: white;
       border: 1px solid white;
       border-radius: 5px;
@@ -89,64 +76,73 @@
     }
 
     #fullscreen-button:hover {
-      background: rgb(213, 65, 11);
+      background: rgba(11, 162, 213, 0.578);
+    }
+
+    #tracklist {
+      text-align: center;
+      position: fixed;
+      bottom: 10vh;
+      left: 4vw;
+      background: rgba(14, 18, 36, 0.9);
+      padding: 1rem;
+      border-radius: 10px;
+      font-size:  1.2rem;
+      color: white;
+      max-width: 300px;
+      z-index: 999;
+    }
+
+    #tracklist p {
+      text-align: center;
+    }
+    #tracklist ul {
+      font-size:  0.9rem;
+      list-style: none;
+      padding: 0;
+      margin-top: 0.5rem;
+      max-height: 100%;
+      overflow-y: hidden;
+    }
+
+    #tracklist li {
+      cursor: pointer;
+      margin-bottom: 0.3rem;
+    }
+
+    #tracklist li:hover {
+      text-decoration: underline;
     }
 
     body.fullscreen-mode .title,
-    body.fullscreen-mode #sound-toolbar {
-    display: none;
+    body.fullscreen-mode #sound-toolbar{
+      display: none;
+    }
+     body.fullscreen-mode #tracklist {
+     top: 10vh;
+     bottom: auto;
+     left: 4vw;
     }
 
-    body.fullscreen-mode #tracklist{
-        top: 10vh;
-        left: 4vw;
-        bottom: auto;
+    #tracklist li.active {
+    color: #aa6cf6;
+    font-weight: bold;
     }
 
-   #cat-wrapper {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 10;
-    pointer-events: none;
+    #cat {
+      width: 32px;
+      height: 32px;
+      position: absolute;
+      left: 700px;
+      top: 800px;
+      z-index: 9;
+      image-rendering: pixelated;
+      background-repeat: no-repeat;
+      background-size: cover;
+      transform: scale(10) scaleX(1);
     }
 
-#tracklist {
-  position: fixed;
-  bottom: 10vh;
-  left: 4vw;
-  background: rgba(0, 0, 0, 0.8);
-  padding: 1rem;
-  border-radius: 10px;
-  font-size: 0.9rem;
-  color: white;
-  max-width: 250px;
-  z-index: 999;
-}
-
-#tracklist ul {
-  list-style: none;
-  padding: 0;
-  margin-top: 0.5rem;
-  max-height: 200px;
-  overflow-y: auto;
-}
-
-#tracklist li {
-  cursor: pointer;
-  margin-bottom: 0.3rem;
-}
-
-#tracklist li:hover {
-  text-decoration: underline;
-}
-
-#tracklist li.active {
-  color: #dd7dad;
-  font-weight: bold;
-}
-
+    
 #interaction-hint {
   position: fixed;
   top: 20px;
@@ -160,233 +156,312 @@
   pointer-events: none;
 }
 
+    @keyframes idle {
+      from { background-position-y: 0px; }
+      to   { background-position-y: -160px; }
+    }
+
+    @keyframes run {
+      from { background-position-y: 0px; }
+      to   { background-position-y: -192px; }
+    }
+
+    @keyframes rush {
+      from { background-position-y: 0px; }
+      to   { background-position-y: -832px; }
+    }
+
+    .idle {
+      background-image: url('WhiteCatIdle.png');
+      animation: idle 0.5s steps(5) infinite;
+    }
+
+    .run {
+      background-image: url('WhiteCatRun.png');
+      animation: run 0.6s steps(6) infinite;
+    }
+
+    .rush {
+      background-image: url('WhiteCatRush.png');
+      animation: rush 1.5s steps(26) 1;
+    }
+
+      #floor {
+      position: absolute;
+      left: 0;
+      top: 85vh; /* was 850px */
+      width: 100vw;
+      bottom: 0;
+      height: auto;
+      background-color: #1a234c;
+      border-top: 10px solid #1f2c4d;
+    }
 
   </style>
   <audio id="music-sound" loop autoplay>
-  <source src="music/space-cat-jams.mp3" type="audio/mpeg">
-  Your browser does not support the audio element.
-</audio>
+    <source src="music/city-jazz.mp3" type="audio/mpeg">
+    Your browser does not support the audio element.
+  </audio>
 </head>
 <body>
-<div class="title">
-  <h1>Welcome to <br> Space Cat Room!</h1>
-  <p>It's time to focus up!</p>
-   <p style="margin-top: 1rem;">
-    <a href="index.html" style="color: #dd7dad; font-weight: bold; text-decoration: none;"><< Return to Home</a>
-  </p>
+
+ <div class="title">
+    <h2>Welcome to <br> City Cat Room!</h2>
+    <p>Time to get some work done!</p>
+    <p style="margin-top: 1rem; font-size: 0.9rem;">
+    <a href="index.html" style="color: #a86cf1; font-weight: bold; text-decoration: none;"><< Return to Home</a>
+    </p>
   </div>
 
-  <!-- Centered Cat Animation -->
-  <div id="cat-wrapper">
-    <dotlottie-player
-      src="https://lottie.host/168008a9-3933-45b5-a62c-11ae5c1ba4de/8BS5weTumK.lottie"
-      background="transparent"
-      speed="2"
-      style="width: 400px; height: 400px"
-      loop autoplay>
-    </dotlottie-player>
-  </div>
 
-<!-- Now Playing -->
-<div id="tracklist">
-  <p><strong>🎶 Now Playing:</strong> <span id="now-playing">THAT SOUND - Heyson</span></p>
+<div id="interaction-hint">Use the arrow keys and space bar to move around</div>
+
+<div id="cat" class="idle"></div>
+<div id="floor"></div>
+
+ <div id="tracklist">
+  <p><strong>🎶 Now Playing:</strong> <span id="now-playing">One Step at a Time - Almost Here</span></p>
   <ul>
-    <li data-time="0">0:00 – THAT SOUND - Heyson</li>
-    <li data-time="390">6:30 – It's OK - Vince Yara</li>
-    <li data-time="756">12:36 – VULTURES - MXRPHEUS</li>
-    <li data-time="918">15:18 – SSStutter - Heyson</li>
-    <li data-time="1104">18:24 – Hex Versa - Chibi Power</li>
-    <li data-time="1495">24:55 – Run the Track Back - Heyson</li>
-    <li data-time="1717">28:37 – SUPERNOVA - Blue Steel</li>
-    <li data-time="1882">31:22 – HXRD - ROONIN</li>
+    <li data-time="0">0:00 – One Step at a Time: Almost Here</li>
+    <li data-time="195">3:15 – Her Hair Was Golden: Rossier</li>
+    <li data-time="366">6:06 – What a Little Smile Can Do</li>
+    <li data-time="601">10:01 – In Other Songs: Franz Gordon</li>
+    <li data-time="812">13:32 – Blue Spaces: Oakwood Station</li>
+    <li data-time="996">16:36 – Verdi: Vendla</li>
+    <li data-time="1221">20:21 – My Simple Thing: Peter Sandberg</li>
+    <li data-time="1523">25:23 – Night by Night: Bladverk Band</li>
   </ul>
 </div>
 
-<div id="interaction-hint">Use the arrow keys to move around</div>
-
-  <!-- Audio Controls Toolbar -->
-  <div id="sound-toolbar">
+<div id="sound-toolbar">
     <div class="sound-control">
       <label for="music-volume">Music</label>
       <input type="range" id="music-volume" min="0" max="100" value="70">
     </div>
     <div class="sound-control">
-      <label for="rain-volume">Meteor Shower</label>
+      <label for="rain-volume">Rain</label>
       <input type="range" id="rain-volume" min="0" max="100" value="70">
     </div>
     <div class="sound-control">
-    <label for="spaceship-volume">Spaceship</label>
-    <input type="range" id="spaceship-volume" min="0" max="100" value="60">
+      <label for="traffic-volume">Distant Traffic</label>
+      <input type="range" id="traffic-volume" min="0" max="100" value="60">
+    </div>
+    <div class="sound-control">
+      <label for="rush-volume">Rush Hour</label>
+      <input type="range" id="rush-volume" min="0" max="100" value="0">
     </div>
     <div class="sound-control">
       <button id="fullscreen-button">Fullscreen</button>
     </div>
-  </div>
+</div>
 
-  <audio id="rain-sound" loop src="music/rain.mp3" autoplay></audio>
-  <audio id="spaceship-sound" loop src="music/spaceship.mp3" autoplay></audio>
 
-  <script>
-    const rainSound = document.getElementById('rain-sound');
-    const meteorSound = document.getElementById('meteor-sound');
+<audio id="rain-sound" loop src="music/rain.mp3" autoplay></audio>
+<audio id="traffic-sound" loop src="music/traffic.mp3" autoplay></audio>
+<audio id="rush-sound" loop src="music/rush-hour.mp3" autoplay></audio>
 
-    document.getElementById('rain-volume').addEventListener('input', (e) => {
-      rainSound.volume = e.target.value / 100;
+
+<script>
+  // get all the audio elements
+  const music = document.getElementById('music-sound');
+  const rain = document.getElementById('rain-sound');
+  const traffic = document.getElementById('traffic-sound');
+  const rush = document.getElementById('rush-sound');
+
+  // fullscreen button element
+  const fullscreenBtn = document.getElementById('fullscreen-button');
+
+  // volume sliders update the actual sound volume
+  document.getElementById('music-volume').addEventListener('input', e => {
+    music.volume = e.target.value / 100;
+  });
+
+  document.getElementById('rain-volume').addEventListener('input', e => {
+    rain.volume = e.target.value / 100;
+  });
+
+  document.getElementById('traffic-volume').addEventListener('input', e => {
+    traffic.volume = e.target.value / 100;
+  });
+
+  document.getElementById('rush-volume').addEventListener('input', e => {
+    rush.volume = e.target.value / 100;
+  });
+
+  // start rush sound at 0 volume
+  rush.volume = 0;
+
+  // when fullscreen is clicked, go fullscreen and hide the button
+  fullscreenBtn.addEventListener('click', () => {
+    document.documentElement.requestFullscreen().then(() => {
+      document.body.classList.add('fullscreen-mode');
+      fullscreenBtn.style.display = 'none';
     });
-    
+  });
 
-    const fullscreenButton = document.getElementById('fullscreen-button');
-    fullscreenButton.addEventListener('click', () => {
+  // if fullscreen mode exits, bring back the button and UI
+  document.addEventListener('fullscreenchange', () => {
     if (!document.fullscreenElement) {
-        document.documentElement.requestFullscreen()
-        .then(() => {
-            document.body.classList.add('fullscreen-mode');
-            fullscreenButton.style.display = 'none';
-        });
-    } 
-    });
-
-    document.addEventListener('fullscreenchange', () => {
-    if (!document.fullscreenElement) {
-        document.body.classList.remove('fullscreen-mode');
-        fullscreenButton.style.display = 'block';
+      document.body.classList.remove('fullscreen-mode');
+      fullscreenBtn.style.display = 'block';
     }
-    });
+  });
 
-    const interactionHint = document.getElementById('interaction-hint');
+  // hide the arrow key hint
+  const interactionHint = document.getElementById('interaction-hint');
 
-function hideInteractionHint() {
-  if (interactionHint) {
-    interactionHint.style.display = 'none';
+  function hideInteractionHint() {
+    if (interactionHint && interactionHint.style.display !== 'none') {
+      interactionHint.style.display = 'none';
+    }
   }
-}
 
-fullscreenButton.addEventListener('click', () => {
-  hideInteractionHint();
-  if (!document.fullscreenElement) {
-    document.documentElement.requestFullscreen()
-      .then(() => {
-        document.body.classList.add('fullscreen-mode');
-        fullscreenButton.style.display = 'none';
-      });
-  }
-});
-
-document.addEventListener('keydown', (e) => {
-  if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.key)) {
+  // hide the hint and go fullscreen when button is clicked
+  fullscreenBtn.addEventListener('click', () => {
     hideInteractionHint();
-  }
-});
-
-    const spaceship = document.getElementById('spaceship-sound');
-
-    document.getElementById('spaceship-volume').addEventListener('input', (e) => {
-    spaceship.volume = e.target.value / 100;
+    document.documentElement.requestFullscreen().then(() => {
+      document.body.classList.add('fullscreen-mode');
+      fullscreenBtn.style.display = 'none';
     });
-
-
-    const musicSound = document.getElementById('music-sound');
-    musicSound.currentTime = 11;
-
-    document.getElementById('music-volume').addEventListener('input', (e) => {
-    const volume = e.target.value / 100;
-
-    // Ensure volume is precisely zero when slider is all the way down
-    musicSound.volume = volume <= 0.01 ? 0 : volume;
-    });
-
-    document.getElementById('music-volume').addEventListener('input', (e) => {
-    musicSound.volume = e.target.value / 100;
-    });
-
-    const trackData = [
-  { time: 0, title: "THAT SOUND - Heyson" },
-  { time: 390, title: "It's OK - Vince Yara" },
-  { time: 756, title: "VULTURES - MXRPHEUS" },
-  { time: 918, title: "SSStutter - Heyson" },
-  { time: 1104, title: "Hex Versa - Chibi Power" },
-  { time: 1495, title: "Run the Track Back - Heyson" },
-  { time: 1717, title: "SUPERNOVA - Blue Steel" },
-  { time: 1882, title: "HXRD - ROONIN" }
-];
-
-const tracklistItems = document.querySelectorAll('#tracklist li');
-const nowPlayingText = document.getElementById('now-playing');
-
-tracklistItems.forEach(item => {
-  item.addEventListener('click', () => {
-    const time = parseInt(item.getAttribute('data-time'));
-    musicSound.currentTime = time;
-    musicSound.play();
   });
-});
 
-setInterval(() => {
-  const currentTime = musicSound.currentTime;
-  let currentTrack = trackData[0].title;
-  let activeIndex = 0;
+  // all the tracks with times (in seconds) and titles
+  const trackData = [
+    { time: 0, title: "One Step at a Time: Almost Here" },
+    { time: 195, title: "Her Hair Was Golden: Rossier" },
+    { time: 366, title: "What a Little Smile Can Do" },
+    { time: 601, title: "In Other Songs: Franz Gordon" },
+    { time: 812, title: "Blue Spaces: Oakwood Station" },
+    { time: 996, title: "Verdi: Vendla" },
+    { time: 1221, title: "My Simple Thing: Peter Sandberg" },
+    { time: 1523, title: "Night by Night: Bladverk Band" }
+  ];
 
-  for (let i = 0; i < trackData.length; i++) {
-    if (currentTime >= trackData[i].time) {
-      currentTrack = trackData[i].title;
-      activeIndex = i;
+  const trackItems = document.querySelectorAll('#tracklist li');
+  const nowPlaying = document.getElementById('now-playing');
+
+  // allow clicking on track names to jump to that time in the music
+  trackItems.forEach(item => {
+    item.addEventListener('click', () => {
+      const time = parseInt(item.getAttribute('data-time'));
+      music.currentTime = time;
+      music.play();
+    });
+  });
+
+  // update "now playing" and highlight active song every 2 seconds
+  setInterval(() => {
+    const current = music.currentTime;
+    let currentTitle = trackData[0].title;
+    let activeIndex = 0;
+
+    for (let i = 0; i < trackData.length; i++) {
+      if (current >= trackData[i].time) {
+        currentTitle = trackData[i].title;
+        activeIndex = i;
+      } else break;
+    }
+
+    nowPlaying.textContent = currentTitle;
+
+    // highlight the active song
+    trackItems.forEach((item, idx) => {
+      if (idx === activeIndex) {
+        item.classList.add('active');
+      } else {
+        item.classList.remove('active');
+      }
+    });
+  }, 2000);
+
+  // --- CAT MOVEMENT LOGIC ---
+
+  const cat = document.getElementById("cat");
+
+  // initial position and velocity
+  let x = 700;
+let y = window.innerHeight * 0.8;
+  let vx = 0;
+  let vy = 0;
+  let facing = 1;
+
+  // movement constants
+  const gravity = 0.5;
+  const jumpPower = -10;
+  const moveSpeed = 8;
+
+  const keys = {}; // holds which keys are pressed
+  let isJumping = false;
+  let isGrounded = true;
+
+  // runs every frame (about 60/sec)
+  function update() {
+    vx = 0;
+
+    // left/right movement
+    if (keys['ArrowLeft']) {
+      vx = -moveSpeed;
+      facing = -1;
+    } else if (keys['ArrowRight']) {
+      vx = moveSpeed;
+      facing = 1;
+    }
+
+    // jump if on the ground
+    if ((keys['ArrowUp'] || keys[' ']) && isGrounded) {
+      vy = jumpPower;
+      isJumping = true;
+      isGrounded = false;
+    }
+
+    // apply gravity and velocity
+    x += vx;
+    vy += gravity;
+    y += vy;
+
+    // stop falling when you hit the floor
+    const floorY = window.innerHeight * 0.8;
+
+    if (y > floorY) {
+      y = floorY;
+      vy = 0;
+      isJumping = false;
+      isGrounded = true;
+    }
+
+    // move the cat to the new position
+    cat.style.left = x + 'px';
+    cat.style.top = y + 'px';
+    cat.style.transform = `scale(10) scaleX(${facing})`;
+
+    // change animation class
+    if (!isGrounded) {
+      cat.className = 'rush'; // in air
+    } else if (vx !== 0) {
+      cat.className = 'run'; // moving on ground
     } else {
-      break;
+      cat.className = 'idle'; // just chilling
     }
   }
 
-  nowPlayingText.textContent = currentTrack;
+  // key pressed -> move
+  document.addEventListener("keydown", (e) => {
+    keys[e.key] = true;
 
-  // Highlight current track
-  tracklistItems.forEach((item, idx) => {
-    item.classList.toggle('active', idx === activeIndex);
+    // hide the hint when user presses a key
+    if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.key)) {
+      hideInteractionHint();
+    }
   });
-}, 2000);
 
-let catX = window.innerWidth / 2;
-let catY = window.innerHeight / 2;
-const catWrapper = document.getElementById('cat-wrapper');
-const catSpeed = 5;
-const keysPressed = {};
+  // key released -> stop movement
+  document.addEventListener("keyup", (e) => {
+    keys[e.key] = false;
+  });
 
-document.addEventListener('keydown', (e) => {
-  keysPressed[e.key] = true;
-});
+  // update movement every 16ms (~60fps)
+  setInterval(update, 30);
+</script>
 
-document.addEventListener('keyup', (e) => {
-  keysPressed[e.key] = false;
-});
-
-function moveCat() {
-  if (keysPressed['ArrowUp']) {
-    catY -= catSpeed;
-  }
-  if (keysPressed['ArrowDown']) {
-    catY += catSpeed;
-  }
-  if (keysPressed['ArrowLeft']) {
-    catX -= catSpeed;
-  }
-  if (keysPressed['ArrowRight']) {
-    catX += catSpeed;
-  }
-
-  // Clamp to screen bounds
-  const maxX = window.innerWidth - 200; // Leave room for the cat's width
-  const maxY = window.innerHeight - 200; // Leave room for the cat's height
-  catX = Math.max(0, Math.min(maxX, catX));
-  catY = Math.max(0, Math.min(maxY, catY));
-
-  catWrapper.style.left = `${catX}px`;
-  catWrapper.style.top = `${catY}px`;
-
-  requestAnimationFrame(moveCat);
-}
-
-
-moveCat();
-
-
-  </script>
 </body>
 </html>
