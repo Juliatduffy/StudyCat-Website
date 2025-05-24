@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Forest Cat Room</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: url('images/pretty-land.png') no-repeat center center fixed;
+      background-size: cover;
+      color: white;
+      text-align: center;
+      min-height: 100vh;
+    }
+
+    .title {
+      position: fixed;
+      top: 80px;
+      left: 80px;
+      background-color: rgba(1, 4, 18, 0.8);
+      padding: 1rem;
+      border-radius: 10px;
+    }
+
+    h2 {
+      margin-top: 2rem;
+      text-align: left;
+    }
+
+    .title p, .title a{
+        text-align: left;
+        font-size: 1.2rem;
+    }
+
+    #sound-toolbar {
+      position: fixed;
+      top: 50%;
+      right: 0;
+      transform: translateY(-50%);
+      background: rgba(1, 4, 18, 0.8);
+      padding: 1rem;
+      border-radius: 10px;
+      color: white;
+      z-index: 999;
+      margin-right: 20px;
+      width: 120px;
+    }
+
+    .sound-control {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+
+    .sound-control label {
+      font-size: 0.9rem;
+      margin-bottom: 0.3rem;
+    }
+
+    .sound-control input[type="range"] {
+      width: 100%;
+    }
+
+    #fullscreen-button {
+      padding: 0.4rem 0.6rem;
+      font-size: 0.9rem;
+      background: rgba(23, 43, 104, 0.995);
+      color: white;
+      border: 1px solid white;
+      border-radius: 5px;
+      cursor: pointer;
+      width: 100px;
+    }
+
+    #fullscreen-button:hover {
+      background: rgba(11, 162, 213, 0.578);
+    }
+
+    .sprite {
+      width: 32px;
+      height: 32px;
+      overflow: hidden;
+      background: url('Idle.png') no-repeat;
+      background-size: 320px 32px;
+      image-rendering: pixelated;
+    }
+
+    .sprite2 {
+      width: 64px;
+      height: 64px;
+      overflow: hidden;
+      background: url('RetroCatsFree.png') no-repeat;
+      background-size: 256px 64px;
+      image-rendering: pixelated;
+    }
+
+    .cat-animation {
+      animation: play 1.5s steps(10) infinite;
+      position: absolute;
+      top: 82vh;
+      left: 42%;
+      transform: translate(-50%, -50%) scale(5);
+      z-index: 10;
+      pointer-events: none;
+    }
+
+    .sleeping-cat {
+      animation: sleep 3s steps(4) infinite;
+      position: absolute;
+      top: 80%;
+      left: 60%;
+      transform: translate(-50%, -50%) scale(3);
+      z-index: 9;
+    }
+
+    @keyframes sleep {
+      from { background-position: 0 0; }
+      to   { background-position: -256px 0; }
+    }
+
+    @keyframes play {
+      from { background-position: 0 0; }
+      to   { background-position: -320px 0; }
+    }
+
+    #tracklist {
+      text-align: center;
+      position: fixed;
+      bottom: 10vh;
+      left: 4vw;
+      background: rgba(0, 0, 0, 0.8);
+      padding: 1rem;
+      border-radius: 10px;
+      font-size:  1.2rem;
+      color: white;
+      max-width: 310px;
+      z-index: 999;
+    }
+
+    #tracklist p {
+      text-align: center;
+    }
+    #tracklist ul {
+      font-size:  0.9rem;
+      list-style: none;
+      padding: 0;
+      margin-top: 0.5rem;
+      max-height: 100%;
+      overflow-y: hidden;
+    }
+
+    #tracklist li {
+      cursor: pointer;
+      margin-bottom: 0.3rem;
+    }
+
+    #tracklist li:hover {
+      text-decoration: underline;
+    }
+
+    body.fullscreen-mode .title,
+    body.fullscreen-mode #sound-toolbar{
+      display: none;
+    }
+
+     body.fullscreen-mode .cat-animation {
+    top: 79vh;
+    }
+    body.fullscreen-mode .sleeping-cat {
+    transform: translate(-50%, -80%) scale(3);
+    }
+     body.fullscreen-mode #tracklist {
+     top: 10vh;
+     bottom: auto;
+     left: 4vw;
+    }
+
+    #tracklist li.active {
+    color: #74d4ff;
+    font-weight: bold;
+    }
+  
+    #heart-effect {
+    position: absolute;
+    width: 30px;
+    height: 30px; 
+    background: url('heart-pulse.png') no-repeat;
+    background-size: 180px 30px; 
+    display: none;
+    z-index: 1000;
+     transform: scale(2); 
+    pointer-events: none;
+    image-rendering: pixelated;
+    }
+
+#spacebar-hint {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  font-size: 1.5rem;
+  color: white;
+  background-color: rgba(0, 0, 0, 0.6);
+  padding: 6px 10px;
+  border-radius: 6px;
+  z-index: 1001;
+  pointer-events: none;
+}
+
+
+
+  </style>
+
+<div id="heart-effect"></div>
+
+  <audio id="music-sound" loop autoplay>
+    <source src="music/forest-room.mp3" type="audio/mpeg">
+    Your browser does not support the audio element.
+  </audio>
+</head>
+<body>
+
+  <div class="title">
+    <h2>Welcome to <br> Forest Cat Room!</h2>
+    <p>Breath in the fresh air. <br>Your focus time starts now.</p>
+    <p style="margin-top: 1rem; font-size: 0.9rem;">
+    <a href="index.html" style="color: #74d4ff; font-weight: bold; text-decoration: none;"><< Return to Home</a>
+    </p>
+  </div>
+
+  <div class="sprite2 sleeping-cat"></div>
+  <div class="sprite cat-animation"></div>
+
+  <!-- Track List -->
+  <div id="tracklist">
+    <p><strong>🎶 Now Playing:</strong> <span id="now-playing">Pyrite Harbors - Oceans</span></p>
+    <ul>
+      <li data-time="0">0:00 – Pyrite Harbors - Oceans</li>
+      <li data-time="292">4:52 – Nature's Love - Justnormal</li>
+      <li data-time="443">7:23 – Bastille Unbound - Martian Landstrom</li>
+      <li data-time="614">10:14 – Little Thoughts - Baegel</li>
+      <li data-time="799">13:19 – Lowkey Stroll - Baegel</li>
+      <li data-time="951">15:51 – Leave and Return - David Celeste</li>
+      <li data-time="1076">17:56 – Dreams in Winter - American Legion</li>
+      <li data-time="1231">20:31 – To the Moon - Roots and Recognition</li>
+      <li data-time="1435">23:55 – Let It Go - Roots and Recognition</li>
+    </ul>
+  </div>
+
+  <!-- Audio Controls Toolbar -->
+  <div id="sound-toolbar">
+    <div class="sound-control">
+      <label for="music-volume">Music</label>
+      <input type="range" id="music-volume" min="0" max="100" value="70">
+    </div>
+    <div class="sound-control">
+      <label for="rain-volume">Rain</label>
+      <input type="range" id="rain-volume" min="0" max="100" value="70">
+    </div>
+    <div class="sound-control">
+      <label for="chirp-volume">Chirping</label>
+      <input type="range" id="chirp-volume" min="0" max="100" value="60">
+    </div>
+    <div class="sound-control">
+      <button id="fullscreen-button">Fullscreen</button>
+    </div>
+  </div>
+ <div id="spacebar-hint">Use the space bar to interact</div>
+
+  <audio id="rain-sound" loop src="music/rain.mp3" autoplay></audio>
+  <audio id="chirp-sound" loop src="music/chirp-sound.mp3" autoplay></audio>
+
+  <script>
+    //music logic
+    const music = document.getElementById('music-sound');
+    const rain = document.getElementById('rain-sound');
+    const chirp = document.getElementById('chirp-sound');
+    const fullscreenBtn = document.getElementById('fullscreen-button');
+    music.currentTime = 443;
+
+    document.getElementById('music-volume').addEventListener('input', e => {
+      music.volume = e.target.value / 100;
+    });
+
+    document.getElementById('rain-volume').addEventListener('input', e => {
+      rain.volume = e.target.value / 100;
+    });
+
+    document.getElementById('chirp-volume').addEventListener('input', e => {
+      chirp.volume = e.target.value / 100;
+    });
+
+    fullscreenBtn.addEventListener('click', () => {
+      document.documentElement.requestFullscreen().then(() => {
+        document.body.classList.add('fullscreen-mode');
+        fullscreenBtn.style.display = 'none';
+      });
+    });
+
+    document.addEventListener('fullscreenchange', () => {
+    if (!document.fullscreenElement) {
+        document.body.classList.remove('fullscreen-mode');
+        fullscreenBtn.style.display = 'block';
+    }
+    });
+
+// Track switching logic
+    const trackData = [
+      { time: 0, title: "Pyrite Harbors - Oceans" },
+      { time: 292, title: "Nature's Love - Justnormal" },
+      { time: 443, title: "Bastille Unbound - Martian Landstrom" },
+      { time: 614, title: "Little Thoughts - Baegel" },
+      { time: 799, title: "Lowkey Stroll - Baegel" },
+      { time: 951, title: "Leave and Return - David Celeste" },
+      { time: 1076, title: "Dreams in Winter - American Legion" },
+      { time: 1231, title: "To the Moon - Roots and Recognition" },
+      { time: 1435, title: "Let It Go - Roots and Recognition" }
+    ];
+
+    const trackItems = document.querySelectorAll('#tracklist li');
+    const nowPlaying = document.getElementById('now-playing');
+
+    trackItems.forEach(item => {
+      item.addEventListener('click', () => {
+        const time = parseInt(item.getAttribute('data-time'));
+        music.currentTime = time;
+        music.play();
+      });
+    });
+
+    setInterval(() => {
+  const current = music.currentTime;
+  let currentTitle = trackData[0].title;
+  let activeIndex = 0;
+
+  for (let i = 0; i < trackData.length; i++) {
+    if (current >= trackData[i].time) {
+      currentTitle = trackData[i].title;
+      activeIndex = i;
+    } else break;
+  }
+
+  nowPlaying.textContent = currentTitle;
+
+  // Highlight current track
+  trackItems.forEach((item, idx) => {
+    if (idx === activeIndex) {
+      item.classList.add('active');
+    } else {
+      item.classList.remove('active');
+    }
+  });
+}, 2000);
+document.addEventListener('keydown', function (e) {
+  if (e.code === 'Space') {
+    const cat = document.querySelector('.cat-animation');
+    const heart = document.getElementById('heart-effect');
+
+    const rect = cat.getBoundingClientRect();
+
+    // Move 50px up and 60px to the right of the cat
+    heart.style.left = `${rect.left + 80}px`;
+    heart.style.top = `${rect.top - 60}px`;
+    heart.style.display = 'block';
+
+    let frame = 0;
+    const totalFrames = 6;
+    const frameWidth = 30;
+    const interval = setInterval(() => {
+    if (frame >= totalFrames) {
+        clearInterval(interval);
+        heart.style.display = 'none';
+        return;
+    }
+    heart.style.backgroundPosition = `-${frame * frameWidth}px 0`;
+    frame++;
+    }, 100);
+
+  }
+});
+
+// Tip in top left corner
+setTimeout(() => {
+  const hint = document.getElementById('spacebar-hint');
+  if (hint) hint.style.display = 'none';
+}, 2000); // 10 seconds
+
+const hint = document.getElementById('spacebar-hint');
+
+function hideHint() {
+  if (hint) {
+    hint.style.display = 'none';
+  }
+}
+// disappear when key hit
+document.addEventListener('keydown', function (e) {
+  if (e.code === 'Space') {
+    hideHint();
+    // your existing spacebar animation logic here...
+  }
+});
+
+fullscreenBtn.addEventListener('click', () => {
+  hideHint();
+  document.documentElement.requestFullscreen().then(() => {
+    document.body.classList.add('fullscreen-mode');
+    fullscreenBtn.style.display = 'none';
+  });
+});
+
+  </script>
+</body>
+</html>

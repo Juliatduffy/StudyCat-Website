@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Cat Controller</title>
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+      font-family: 'Segoe UI', sans-serif;
+      background: url('images/city.png') no-repeat center center fixed;
+      background-size: cover;
+      color: white;
+      text-align: center;
+      min-height: 100vh;
+    }
+
+    .title {
+      position: fixed;
+      top: 80px;
+      left: 80px;
+      background-color: rgba(14, 18, 36, 0.9);
+      padding: 1rem;
+      border-radius: 10px;
+    }
+
+    h2 {
+      margin-top: 2rem;
+      text-align: left;
+    }
+
+    .title p, .title a{
+        text-align: left;
+        font-size: 1.2rem;
+    }
+    
+    #sound-toolbar {
+      position: fixed;
+      top: 50%;
+      right: 0;
+      transform: translateY(-50%);
+      background: rgba(14, 18, 36, 0.9);
+      padding: 1rem;
+      border-radius: 10px;
+      color: white;
+      z-index: 999;
+      margin-right: 20px;
+      width: 120px;
+    }
+
+    .sound-control {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+
+    .sound-control label {
+      font-size: 0.9rem;
+      margin-bottom: 0.3rem;
+    }
+
+    .sound-control input[type="range"] {
+      width: 100%;
+    }
+
+    #fullscreen-button {
+      padding: 0.4rem 0.6rem;
+      font-size: 0.9rem;
+      background: rgba(23, 43, 104, 0.995);
+      color: white;
+      border: 1px solid white;
+      border-radius: 5px;
+      cursor: pointer;
+      width: 100px;
+    }
+
+    #fullscreen-button:hover {
+      background: rgba(11, 162, 213, 0.578);
+    }
+
+    #tracklist {
+      text-align: center;
+      position: fixed;
+      bottom: 10vh;
+      left: 4vw;
+      background: rgba(14, 18, 36, 0.9);
+      padding: 1rem;
+      border-radius: 10px;
+      font-size:  1.2rem;
+      color: white;
+      max-width: 300px;
+      z-index: 999;
+    }
+
+    #tracklist p {
+      text-align: center;
+    }
+    #tracklist ul {
+      font-size:  0.9rem;
+      list-style: none;
+      padding: 0;
+      margin-top: 0.5rem;
+      max-height: 100%;
+      overflow-y: hidden;
+    }
+
+    #tracklist li {
+      cursor: pointer;
+      margin-bottom: 0.3rem;
+    }
+
+    #tracklist li:hover {
+      text-decoration: underline;
+    }
+
+    body.fullscreen-mode .title,
+    body.fullscreen-mode #sound-toolbar{
+      display: none;
+    }
+     body.fullscreen-mode #tracklist {
+     top: 10vh;
+     bottom: auto;
+     left: 4vw;
+    }
+
+    #tracklist li.active {
+    color: #aa6cf6;
+    font-weight: bold;
+    }
+
+    #cat {
+      width: 32px;
+      height: 32px;
+      position: absolute;
+      left: 700px;
+      top: 800px;
+      z-index: 9;
+      image-rendering: pixelated;
+      background-repeat: no-repeat;
+      background-size: cover;
+      transform: scale(9) scaleX(1);
+    }
+
+    
+#interaction-hint {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  font-size: 1.5rem;
+  color: white;
+  background-color: rgba(0, 0, 0, 0.6);
+  padding: 6px 10px;
+  border-radius: 6px;
+  z-index: 1001;
+  pointer-events: none;
+}
+
+    @keyframes idle {
+      from { background-position-y: 0px; }
+      to   { background-position-y: -160px; }
+    }
+
+    @keyframes run {
+      from { background-position-y: 0px; }
+      to   { background-position-y: -192px; }
+    }
+
+    @keyframes rush {
+      from { background-position-y: 0px; }
+      to   { background-position-y: -832px; }
+    }
+
+    .idle {
+      background-image: url('WhiteCatIdle.png');
+      animation: idle 0.5s steps(5) infinite;
+    }
+
+    .run {
+      background-image: url('WhiteCatRun.png');
+      animation: run 0.6s steps(6) infinite;
+    }
+
+    .rush {
+      background-image: url('WhiteCatRush.png');
+      animation: rush 1.5s steps(26) 1;
+    }
+
+    #floor {
+    position: absolute;
+    left: 0;
+    top: 850px;
+    width: 100vw;
+    height: auto;
+    bottom: 0px;
+    background-color: #1a234c; 
+    border-top: 10px solid #1f2c4d; 
+  }
+ 
+.garden-group {
+  position: absolute;
+  bottom: 0;
+  transform: translateY(45px);
+  right: 330px; 
+  width: 500px;
+  height: 300px;
+  z-index: 10;
+}
+
+body.fullscreen-mode .garden-group {
+  transform: translateY(-40px);
+}
+
+.tree {
+  position: absolute;
+  z-index: 1;
+  bottom: 150px;
+}
+
+.tree.left {
+  width: 500px;
+  left: 310px;
+}
+
+.tree.right {
+  width: 600px;  
+  left: 100px;
+}
+
+.planter {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  z-index: 0;
+}
+
+  </style>
+  <audio id="music-sound" loop autoplay>
+    <source src="music/city-jazz.mp3" type="audio/mpeg">
+    Your browser does not support the audio element.
+  </audio>
+</head>
+<body>
+
+ <div class="title">
+    <h2>Welcome to <br> City Cat Room!</h2>
+    <p>Time to get some work done!</p>
+    <p style="margin-top: 1rem; font-size: 0.9rem;">
+    <a href="index.html" style="color: #a86cf1; font-weight: bold; text-decoration: none;"><< Return to Home</a>
+    </p>
+  </div>
+
+ <div class="garden-group">
+    <img src="images/tree.gif" class="tree left" alt="Tree 1">
+    <img src="images/tree.gif" class="tree right" alt="Tree 2">
+    <img src="images/planter2.png" class="planter" alt="Planter Box">
+  </div>
+
+<div id="interaction-hint">Use the arrow keys and space bar to move around</div>
+
+<div id="cat" class="idle"></div>
+<div id="floor"></div>
+
+ <div id="tracklist">
+  <p><strong>🎶 Now Playing:</strong> <span id="now-playing">One Step at a Time - Almost Here</span></p>
+  <ul>
+    <li data-time="0">0:00 – One Step at a Time: Almost Here</li>
+    <li data-time="195">3:15 – Her Hair Was Golden: Rossier</li>
+    <li data-time="366">6:06 – What a Little Smile Can Do</li>
+    <li data-time="601">10:01 – In Other Songs: Franz Gordon</li>
+    <li data-time="812">13:32 – Blue Spaces: Oakwood Station</li>
+    <li data-time="996">16:36 – Verdi: Vendla</li>
+    <li data-time="1221">20:21 – My Simple Thing: Peter Sandberg</li>
+    <li data-time="1523">25:23 – Night by Night: Bladverk Band</li>
+  </ul>
+</div>
+
+<div id="sound-toolbar">
+    <div class="sound-control">
+      <label for="music-volume">Music</label>
+      <input type="range" id="music-volume" min="0" max="100" value="70">
+    </div>
+    <div class="sound-control">
+      <label for="rain-volume">Rain</label>
+      <input type="range" id="rain-volume" min="0" max="100" value="70">
+    </div>
+    <div class="sound-control">
+      <label for="traffic-volume">Distant Traffic</label>
+      <input type="range" id="traffic-volume" min="0" max="100" value="60">
+    </div>
+    <div class="sound-control">
+      <label for="rush-volume">Rush Hour</label>
+      <input type="range" id="rush-volume" min="0" max="100" value="0">
+    </div>
+    <div class="sound-control">
+      <button id="fullscreen-button">Fullscreen</button>
+    </div>
+</div>
+
+
+<audio id="rain-sound" loop src="music/rain.mp3" autoplay></audio>
+<audio id="traffic-sound" loop src="music/traffic.mp3" autoplay></audio>
+<audio id="rush-sound" loop src="music/rush-hour.mp3" autoplay></audio>
+
+
+<script>
+  // get all the audio elements
+  const music = document.getElementById('music-sound');
+  const rain = document.getElementById('rain-sound');
+  const traffic = document.getElementById('traffic-sound');
+  const rush = document.getElementById('rush-sound');
+
+  // fullscreen button element
+  const fullscreenBtn = document.getElementById('fullscreen-button');
+
+  // volume sliders update the actual sound volume
+  document.getElementById('music-volume').addEventListener('input', e => {
+    music.volume = e.target.value / 100;
+  });
+
+  document.getElementById('rain-volume').addEventListener('input', e => {
+    rain.volume = e.target.value / 100;
+  });
+
+  document.getElementById('traffic-volume').addEventListener('input', e => {
+    traffic.volume = e.target.value / 100;
+  });
+
+  document.getElementById('rush-volume').addEventListener('input', e => {
+    rush.volume = e.target.value / 100;
+  });
+
+  // start rush sound at 0 volume
+  rush.volume = 0;
+
+  // when fullscreen is clicked, go fullscreen and hide the button
+  fullscreenBtn.addEventListener('click', () => {
+    document.documentElement.requestFullscreen().then(() => {
+      document.body.classList.add('fullscreen-mode');
+      fullscreenBtn.style.display = 'none';
+    });
+  });
+
+  // if fullscreen mode exits, bring back the button and UI
+  document.addEventListener('fullscreenchange', () => {
+    if (!document.fullscreenElement) {
+      document.body.classList.remove('fullscreen-mode');
+      fullscreenBtn.style.display = 'block';
+    }
+  });
+
+  // hide the arrow key hint
+  const interactionHint = document.getElementById('interaction-hint');
+
+  function hideInteractionHint() {
+    if (interactionHint && interactionHint.style.display !== 'none') {
+      interactionHint.style.display = 'none';
+    }
+  }
+
+  // hide the hint and go fullscreen when button is clicked
+  fullscreenBtn.addEventListener('click', () => {
+    hideInteractionHint();
+    document.documentElement.requestFullscreen().then(() => {
+      document.body.classList.add('fullscreen-mode');
+      fullscreenBtn.style.display = 'none';
+    });
+  });
+
+  // all the tracks with times (in seconds) and titles
+  const trackData = [
+    { time: 0, title: "One Step at a Time: Almost Here" },
+    { time: 195, title: "Her Hair Was Golden: Rossier" },
+    { time: 366, title: "What a Little Smile Can Do" },
+    { time: 601, title: "In Other Songs: Franz Gordon" },
+    { time: 812, title: "Blue Spaces: Oakwood Station" },
+    { time: 996, title: "Verdi: Vendla" },
+    { time: 1221, title: "My Simple Thing: Peter Sandberg" },
+    { time: 1523, title: "Night by Night: Bladverk Band" }
+  ];
+
+  const trackItems = document.querySelectorAll('#tracklist li');
+  const nowPlaying = document.getElementById('now-playing');
+
+  // allow clicking on track names to jump to that time in the music
+  trackItems.forEach(item => {
+    item.addEventListener('click', () => {
+      const time = parseInt(item.getAttribute('data-time'));
+      music.currentTime = time;
+      music.play();
+    });
+  });
+
+  // update "now playing" and highlight active song every 2 seconds
+  setInterval(() => {
+    const current = music.currentTime;
+    let currentTitle = trackData[0].title;
+    let activeIndex = 0;
+
+    for (let i = 0; i < trackData.length; i++) {
+      if (current >= trackData[i].time) {
+        currentTitle = trackData[i].title;
+        activeIndex = i;
+      } else break;
+    }
+
+    nowPlaying.textContent = currentTitle;
+
+    // highlight the active song
+    trackItems.forEach((item, idx) => {
+      if (idx === activeIndex) {
+        item.classList.add('active');
+      } else {
+        item.classList.remove('active');
+      }
+    });
+  }, 2000);
+
+  // --- CAT MOVEMENT LOGIC ---
+
+  const cat = document.getElementById("cat");
+
+  // initial position and velocity
+  let x = 700;
+  let y = 800;
+  let vx = 0;
+  let vy = 0;
+  let facing = 1;
+
+  // movement constants
+  const gravity = 0.5;
+  const jumpPower = -10;
+  const moveSpeed = 8;
+
+  const keys = {}; // holds which keys are pressed
+  let isJumping = false;
+  let isGrounded = true;
+
+  // runs every frame (about 60/sec)
+  function update() {
+    vx = 0;
+
+    // left/right movement
+    if (keys['ArrowLeft']) {
+      vx = -moveSpeed;
+      facing = -1;
+    } else if (keys['ArrowRight']) {
+      vx = moveSpeed;
+      facing = 1;
+    }
+
+    // jump if on the ground
+    if ((keys['ArrowUp'] || keys[' ']) && isGrounded) {
+      vy = jumpPower;
+      isJumping = true;
+      isGrounded = false;
+    }
+
+    // apply gravity and velocity
+    x += vx;
+    vy += gravity;
+    y += vy;
+
+    // stop falling when you hit the floor
+    if (y > 800) {
+      y = 800;
+      vy = 0;
+      isJumping = false;
+      isGrounded = true;
+    }
+
+    // move the cat to the new position
+    cat.style.left = x + 'px';
+    cat.style.top = y + 'px';
+    cat.style.transform = `scale(9) scaleX(${facing})`;
+
+    // change animation class
+    if (!isGrounded) {
+      cat.className = 'rush'; // in air
+    } else if (vx !== 0) {
+      cat.className = 'run'; // moving on ground
+    } else {
+      cat.className = 'idle'; // just chilling
+    }
+  }
+
+  // key pressed -> move
+  document.addEventListener("keydown", (e) => {
+    keys[e.key] = true;
+
+    // hide the hint when user presses a key
+    if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.key)) {
+      hideInteractionHint();
+    }
+  });
+
+  // key released -> stop movement
+  document.addEventListener("keyup", (e) => {
+    keys[e.key] = false;
+  });
+
+  // update movement every 16ms (~60fps)
+  setInterval(update, 30);
+</script>
+
+</body>
+</html>

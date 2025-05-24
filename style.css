@@ -1,0 +1,42 @@
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #c1dbe0;
+  margin: 0;
+  padding: 2rem;
+  text-align: center;
+}
+
+.container {
+ background-color: #f3fcfd;
+  padding: 60px 0px;
+  border-radius: 28px;
+  max-width: 800px;
+  margin: auto;
+  color: #392d2d;
+  font-weight: 500;
+  margin-top: 15%;
+}
+
+.scene-grid {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+.scene-card {
+  display: block;
+  padding: 1rem 2rem;
+  background-color: #fff;
+  border-radius: 10px;
+  text-decoration: none;
+  color: #392d2d;
+  font-weight: 500;
+  font-size: large;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.4);
+  transition: transform 0.2s ease;
+}
+
+.scene-card:hover {
+  transform: scale(1.05);
+}
