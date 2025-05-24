@@ -139,7 +139,7 @@
       image-rendering: pixelated;
       background-repeat: no-repeat;
       background-size: cover;
-      transform: scale(9) scaleX(1);
+      transform: scale(10) scaleX(1);
     }
 
     
@@ -186,53 +186,26 @@
       animation: rush 1.5s steps(26) 1;
     }
 
-    #floor {
-    position: absolute;
-    left: 0;
-    top: 850px;
-    width: 100vw;
-    height: auto;
-    bottom: 0px;
-    background-color: #1a234c; 
-    border-top: 10px solid #1f2c4d; 
-  }
- 
-.garden-group {
-  position: absolute;
-  bottom: 0;
-  transform: translateY(45px);
-  right: 330px; 
-  width: 500px;
-  height: 300px;
-  z-index: 10;
-}
+      #floor {
+      position: absolute;
+      left: 0;
+      top: 85vh; /* was 850px */
+      width: 100vw;
+      bottom: 0;
+      height: auto;
+      background-color: #1a234c;
+      border-top: 10px solid #1f2c4d;
+    }
 
-body.fullscreen-mode .garden-group {
-  transform: translateY(-40px);
-}
-
-.tree {
-  position: absolute;
-  z-index: 1;
-  bottom: 150px;
-}
-
-.tree.left {
-  width: 500px;
-  left: 310px;
-}
-
-.tree.right {
-  width: 600px;  
-  left: 100px;
-}
-
-.planter {
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-  z-index: 0;
-}
+    #car {
+      position: absolute;
+      width: 500px; 
+      right: 60px;
+      top: 75vh;  
+      transform: scaleX(-1);
+      z-index: 900;
+      image-rendering: pixelated;
+    }
 
   </style>
   <audio id="music-sound" loop autoplay>
@@ -250,11 +223,7 @@ body.fullscreen-mode .garden-group {
     </p>
   </div>
 
- <div class="garden-group">
-    <img src="images/tree.gif" class="tree left" alt="Tree 1">
-    <img src="images/tree.gif" class="tree right" alt="Tree 2">
-    <img src="images/planter2.png" class="planter" alt="Planter Box">
-  </div>
+<img id="car" src="images/car.png" alt="Car on the right">
 
 <div id="interaction-hint">Use the arrow keys and space bar to move around</div>
 
@@ -422,7 +391,7 @@ body.fullscreen-mode .garden-group {
 
   // initial position and velocity
   let x = 700;
-  let y = 800;
+let y = window.innerHeight * 0.8;
   let vx = 0;
   let vy = 0;
   let facing = 1;
@@ -462,8 +431,10 @@ body.fullscreen-mode .garden-group {
     y += vy;
 
     // stop falling when you hit the floor
-    if (y > 800) {
-      y = 800;
+    const floorY = window.innerHeight * 0.8;
+
+    if (y > floorY) {
+      y = floorY;
       vy = 0;
       isJumping = false;
       isGrounded = true;
@@ -472,7 +443,7 @@ body.fullscreen-mode .garden-group {
     // move the cat to the new position
     cat.style.left = x + 'px';
     cat.style.top = y + 'px';
-    cat.style.transform = `scale(9) scaleX(${facing})`;
+    cat.style.transform = `scale(10) scaleX(${facing})`;
 
     // change animation class
     if (!isGrounded) {
