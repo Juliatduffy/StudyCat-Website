@@ -1,4 +1,4 @@
-# Forest Cat Room
+# StudyCat Interactive Rooms
 
 StudyCat is an interactive web environment featuring pixel-based designs, study music, ambient sounds, and cats! It's designed to be played on a second monitor while you are studying to keep you focused.
 
