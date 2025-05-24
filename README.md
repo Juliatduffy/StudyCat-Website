@@ -1,59 +1,40 @@
 # Forest Cat Room
 
-Forest Cat Room is a cozy, interactive web environment featuring pixel-based cat animations, ambient lofi music, and subtle background sound controls. It's designed as a calming digital workspace for focus sessions or background atmosphere.
+StudyCat is an interactive web environment featuring pixel-based designs, study music, ambient sounds, and cats! It's designed to be played on a second monitor while you are studying to keep you focused.
+
+Hosted on GitHub pages at this link: https://juliatduffy.github.io/StudyCat/index.html 
 
 ---
 
 ## Features
 
-- Animated pixel art sprites (idle and sleeping cats)
+- Animated pixel art cat sprites built using `@keyframes` and `steps()`
 - Ambient sound effects including rain, chirping, and music
-- Forest-themed background with animated effects
-- Clickable tracklist with dynamic highlighting and now playing display
-- Interactive spacebar animation that triggers an animated heart
+- AI-Generated pixel backgrounds
+- Clickable tracklist with now playing display
+- Interactive animations
 - Fullscreen support with layout adjustments on enter/exit
+- 3 rooms with different themes - forest cat (lofi), city cat (jazz), and space cat (techno)
 
 ---
 
 ## Technologies Used
 
-- HTML for semantic layout
-- CSS for styling and sprite-based animation
-- JavaScript for interactivity, audio syncing, and DOM updates
+- HTML for  layout
+- CSS for styling 
+- JavaScript for interactivity, audio, and animations
 - GitHub Pages for hosting
 
 ---
 
-## Assets and Licensing
+## Credits
 
-All music tracks and image assets used in this project are royalty-free and licensed for public or personal use. Sources include royalty-free music libraries and freely available pixel sprite packs.
+Nearly all music and images used in this project are royalty-free and licensed for public use. Music was sourced from: https://www.epidemicsound.com/
 
----
-
-## Learning Outcomes
-
-- Built and animated sprite sheets using `@keyframes` and `steps()`
-- Controlled layered audio elements with individual volume sliders
-- Synced music playback with a clickable, scrollable tracklist
-- Applied responsive design concepts to maintain layout in fullscreen mode
-- Created a playful user interaction using event-based animation logic
-
----
-
----
-
-## Live Demo
-
-This project is deployed using GitHub Pages.
-
-**URL:** `https://your-username.github.io/forest-cat-room/`  
-(Replace with your actual link after deployment)
+The background to the city cat page was done by Ko_dll on Reddit. Thank you for designing and sharing this great background! src: https://www.reddit.com/r/PixelArt/comments/nobto1/night_city_background_for_my_small_bzzzt_game/
 
 ---
 
 ## Author
 
-Created by Julia  
-Computer Science student at the University of Utah
-
-This project is part of a personal portfolio showcasing creative front-end development and interactive design.
+Created by Julia Duffy for personal use
