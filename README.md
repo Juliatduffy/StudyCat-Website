@@ -9,7 +9,7 @@ Hosted on GitHub pages at this link: https://juliatduffy.github.io/StudyCat/inde
 ## Features
 
 - Animated pixel art cat sprites built using `@keyframes` and `steps()`
-- Ambient sound effects including rain, chirping, and music
+- Ambient sound effects including rain, chirping, and other white noises
 - AI-Generated pixel backgrounds
 - Clickable tracklist with now playing display
 - Interactive animations
