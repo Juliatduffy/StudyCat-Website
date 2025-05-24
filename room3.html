@@ -140,6 +140,7 @@
       background-repeat: no-repeat;
       background-size: cover;
       transform: scale(10) scaleX(1);
+      transform-origin: center center;
     }
 
     
@@ -443,7 +444,7 @@ let y = window.innerHeight * 0.8;
     // move the cat to the new position
     cat.style.left = x + 'px';
     cat.style.top = y + 'px';
-    cat.style.transform = `scale(10) scaleX(${facing})`;
+    cat.style.transform = `scale(${facing * 10}, 10)`;
 
     // change animation class
     if (!isGrounded) {
