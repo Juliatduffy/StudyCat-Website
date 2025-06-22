@@ -23,11 +23,11 @@ Disclaimer: This website is heavily inspired by this lovely VS Code Extension: h
 
 ## Screenshots
 
+<img src="assets/home.png" alt="Home Screen" width="500" />
+
 <img src="assets/forest1.png" alt="Forest Scene 1" width="500" />
 
 <img src="assets/forest2.png" alt="Forest Scene 2" width="500" />
-
-<img src="assets/home.png" alt="Home Screen" width="500" />
 
 <img src="assets/space1.png" alt="Space Scene 1" width="500" />
 
