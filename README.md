@@ -1,8 +1,12 @@
 # StudyCat Interactive WebApp
 
-StudyCat is an interactive web environment featuring pixel-based designs, study music, ambient sounds, and cats! It's designed to be played on a second monitor while you are studying to keep you focused.
+Hi there! StudyCat is an interactive web environment featuring pixel-based designs, study music, ambient sounds, and cats! It's designed to be played on a second monitor while you are studying to keep you focused.
 
 Hosted on GitHub pages at this link: https://juliatduffy.github.io/StudyCat/index.html 
+
+Demo Video: https://github.com/Juliatduffy/StudyCat/blob/main/assets/study-cat-demo-video.mp4
+
+Disclaimer: This website is heavily inspired by this lovely VS Code Extension: https://tonybaloney.github.io/vscode-pets/
 
 ---
 
@@ -14,6 +18,24 @@ Hosted on GitHub pages at this link: https://juliatduffy.github.io/StudyCat/inde
 - Clickable tracklist with now playing display
 - Fullscreen support
 - 3 rooms with different themes - forest cat (lofi), city cat (jazz), and space cat (techno)
+
+---
+
+## Screenshots
+
+<img src="assets/forest1.png" alt="Forest Scene 1" width="500" />
+
+<img src="assets/forest2.png" alt="Forest Scene 2" width="500" />
+
+<img src="assets/home.png" alt="Home Screen" width="500" />
+
+<img src="assets/space1.png" alt="Space Scene 1" width="500" />
+
+<img src="assets/space2.png" alt="Space Scene 2" width="500" />
+
+<img src="assets/space3.png" alt="Space Scene 3" width="500" />
+
+<img src="assets/city.png" alt="City Screen" width="500" />
 
 ---
 
