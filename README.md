@@ -35,7 +35,6 @@ Disclaimer: This website is heavily inspired by this lovely VS Code Extension: h
 
 <img src="assets/space3.png" alt="Space Scene 3" width="500" />
 
-<img src="assets/city.png" alt="City Screen" width="500" />
 
 ---
 
